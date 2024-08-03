@@ -55,6 +55,10 @@
           imports = [./devenv.nix];
         };
 
+        packages = {
+          wch-udev-rules = pkgs.callPackage ./nix/wch-udev-rules {};
+        };
+
         treefmt = import ./treefmt.nix;
       };
     };
