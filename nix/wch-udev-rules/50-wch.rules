@@ -1,0 +1,8 @@
+# Access to USB ISP bootloader
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="4348", ATTRS{idProduct}=="55e0", MODE="660", GROUP="plugdev", TAG+="uaccess"
+
+# Access to WCH-Link
+SUBSYSTEM=="usb", ATTR{idVendor}="1a86", ATTR{idProduct}=="8010", MODE="660", GROUP="plugdev", TAG+="uaccess"
+
+# Access to Serial-to-USB
+SUBSYSTEM=="usb", ATTR{idVendor}="1a86", ATTR{idProduct}=="8012", MODE="660", GROUP="plugdev", TAG+="uaccess"
