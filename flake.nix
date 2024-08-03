@@ -57,6 +57,8 @@
 
         packages = {
           wch-udev-rules = pkgs.callPackage ./nix/wch-udev-rules {};
+          wchisp = pkgs.callPackage ./nix/wchisp {};
+          wlink = pkgs.callPackage ./nix/wlink {};
         };
 
         treefmt = import ./treefmt.nix;
