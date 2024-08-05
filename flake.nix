@@ -55,7 +55,12 @@
           imports = [./devenv.nix];
         };
 
-        packages = {
+        packages = let
+          mrs-toolchain = pkgs.callPackage ./nix/mrs-toolchain {};
+        in {
+          mrs-openocd = mrs-toolchain.openocd;
+          mrs-riscv-embedded-gcc  = mrs-toolchain.riscv-embedded-gcc;
+          mrs-riscv-embedded-gcc12  = mrs-toolchain.riscv-embedded-gcc12;
           wch-udev-rules = pkgs.callPackage ./nix/wch-udev-rules {};
           wchisp = pkgs.callPackage ./nix/wchisp {};
           wlink = pkgs.callPackage ./nix/wlink {};
