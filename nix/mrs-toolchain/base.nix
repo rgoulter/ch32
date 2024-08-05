@@ -8,6 +8,10 @@
 { lib
 , stdenv
 , fetchurl
+, autoPatchelfHook
+, hidapi
+, libjaylink
+, libusb1
 , mrs_toolchain_version ? "1.90"
 , mrs_toolchain_hash ? "sha256-PO7uddJg0L2Ugv7CYLpIyRKAiE+8oXU0nG3NAdYse6g="
 }:
@@ -21,21 +25,15 @@ stdenv.mkDerivation rec {
     hash = mrs_toolchain_hash;
   };
 
+  buildInputs = [ autoPatchelfHook hidapi libjaylink libusb1 ];
+
   dontConfigure = true;
   dontBuild = true;
-  dontPatchELF = true;
   dontStrip = true;
 
   installPhase = ''
     mkdir -p $out/
     cp -r ${mrs_toolchain_dir}/. $out
-  '';
-
-  preFixup = ''
-    find $out -type f | while read f; do
-      patchelf "$f" > /dev/null 2>&1 || continue
-      patchelf --set-interpreter $(cat ${stdenv.cc}/nix-support/dynamic-linker) "$f" || true
-    done
   '';
 
   meta = {
