@@ -1,0 +1,4 @@
+:PROPERTIES:
+:ID:       8d29b1ec-d5be-453a-9676-ad9733e82d92
+:END:
+#+title: c programming language

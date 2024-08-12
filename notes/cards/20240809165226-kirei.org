@@ -1,0 +1,12 @@
+:PROPERTIES:
+:ID:       66011c6a-46f2-4bf8-aa92-a3725e09178b
+:END:
+#+title: kirei
+
+https://github.com/semickolon/kirei
+
+[[id:27d40be1-0f3b-41d3-b015-3dc072efba8f][keyboard firmware]].
+
+Written with [[id:897f3621-8c3d-4a75-a367-ed25eb42e0ba][zig programming language]].
+
+Uses [[id:0295b90c-d0b3-43ff-8d94-ce86c34a292e][nickel]] for configuring keymap definitions.

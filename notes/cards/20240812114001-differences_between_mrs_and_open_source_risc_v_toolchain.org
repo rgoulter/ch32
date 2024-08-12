@@ -1,0 +1,12 @@
+:PROPERTIES:
+:ID:       13eceae2-ab25-4e28-b77c-c6a8ccc852b8
+:END:
+#+title: differences between mrs and open source risc-v toolchain
+
+There are differences between the [[id:86d8ec01-f21b-4f7d-8d75-05e60c4a1ee7][mounriver studio risc-v gnu toolchain]] and the [[id:208d509f-4eb3-49a7-8917-e75493b611e1][xpack risc-v gnu toolchain]].
+
+- The MounRiver toolchain has an extra param `highcode-gen-section-name` that the xpack toolchains don't have.
+
+- I observed that with the BLE EVT Examples, when =config.h= defines =HAL_SLEEP= to be =TRUE=,
+   the firmware only works properly when compiled with the MRS toolchain.
+

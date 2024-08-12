@@ -1,0 +1,9 @@
+:PROPERTIES:
+:ID:       a6ff5e5c-d1b9-4ba7-af1e-171965736d7d
+:END:
+#+title: wch-linke-r0-1v3
+
+WCH-LinkE
+
+Per WCH-Link schematic,
+uses CH32V305F.

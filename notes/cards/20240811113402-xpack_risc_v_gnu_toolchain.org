@@ -1,0 +1,10 @@
+:PROPERTIES:
+:ID:       208d509f-4eb3-49a7-8917-e75493b611e1
+:END:
+#+title: xpack risc-v gnu toolchain
+
+Prebuild distributions of the open source [[id:1c04d907-73f1-4226-82dd-b39251a0355d][risc-v gnu toolchain]].
+
+- For newer GCC (v11 and newer) :: https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases
+
+- For older GCC (v10 and older) :: https://github.com/xpack-dev-tools/riscv-none-embed-gcc-xpack/releases

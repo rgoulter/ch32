@@ -1,0 +1,4 @@
+:PROPERTIES:
+:ID:       27d40be1-0f3b-41d3-b015-3dc072efba8f
+:END:
+#+title: keyboard firmware

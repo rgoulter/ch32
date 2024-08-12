@@ -1,0 +1,13 @@
+:PROPERTIES:
+:ID:       86246d61-0cd4-4c72-b9eb-059355105265
+:END:
+#+title: wch-link pin connections
+
+Per Table 6 "Common chip pin connections" of [[id:b81fc52e-dead-4493-aa66-d616920838df][wch-link user manual]]:
+
+| MCU      | SWDIO | SWCLK |
+|----------+-------+-------|
+| [[id:05b5045a-6dd7-4e9c-aeff-22e781148c47][CH58x]]    | PB14  | PB15  |
+| [[id:b3cdcdfa-f7e1-4f88-bf17-d74d43539f0c][CH59x]]    | PB14  | PB15  |
+| CH32X035 | PC18  | PC19  |
+| CH32V203 | PA13  | PA14  |

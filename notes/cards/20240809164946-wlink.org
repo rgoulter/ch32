@@ -1,0 +1,8 @@
+:PROPERTIES:
+:ID:       f428dad7-9072-4d59-a721-1f24b5c1a168
+:END:
+#+title: wlink
+
+https://github.com/ch32-rs/wlink/
+
+An open source WCH-Link command line tool, for use with [[id:ba5d4dcf-5e9c-466e-adb3-472ae9ed439c][wch-link debugger]].

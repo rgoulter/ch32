@@ -1,0 +1,10 @@
+:PROPERTIES:
+:ID:       3e33577b-ca63-4ee6-b83e-65f291fe84ae
+:END:
+#+title: weact studio wch-link debugger
+
+https://aliexpress.com/item/1005003693318567.html
+
+Uses the CH549G.
+
+Essentially, same as the [[id:90935b88-b490-42d7-b4e3-fb3a480106fe][wch-link-r1-1v1]].

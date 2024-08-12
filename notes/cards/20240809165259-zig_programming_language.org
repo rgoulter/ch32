@@ -1,0 +1,8 @@
+:PROPERTIES:
+:ID:       897f3621-8c3d-4a75-a367-ed25eb42e0ba
+:END:
+#+title: zig programming language
+
+A "better than C" programming language.
+
+- https://www.learnxinyminutes.com/docs/zig/

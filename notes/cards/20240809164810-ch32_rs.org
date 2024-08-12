@@ -1,0 +1,8 @@
+:PROPERTIES:
+:ID:       1345bfd5-dc59-400b-9c7f-f70285da2fba
+:END:
+#+title: ch32-rs
+
+https://github.com/ch32-rs
+
+GitHub organisation with ch32 related projects implemented in Rust.

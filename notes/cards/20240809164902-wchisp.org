@@ -1,0 +1,8 @@
+:PROPERTIES:
+:ID:       80515c8b-912a-4691-826a-f59afe80daf3
+:END:
+#+title: wchisp
+
+https://github.com/ch32-rs/wchisp
+
+Open source CLI tool for flashing using USB ISP for WCH MCUs.

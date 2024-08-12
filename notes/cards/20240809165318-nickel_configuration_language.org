@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       0295b90c-d0b3-43ff-8d94-ce86c34a292e
+:END:
+#+title: nickel configuration language
+
+A "json + functions (+ types)" configuration language.

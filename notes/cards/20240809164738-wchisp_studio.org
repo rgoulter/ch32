@@ -1,0 +1,10 @@
+:PROPERTIES:
+:ID:       bc92ba4f-e63b-44df-9003-44f69d3c713a
+:END:
+#+title: wchisp studio
+
+https://www.wch.cn/download/WCHISPTool_Setup_exe.html
+
+WCH tool for using ISP over USB or UART.
+
+Windows only.

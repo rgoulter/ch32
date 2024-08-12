@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       ba5d4dcf-5e9c-466e-adb3-472ae9ed439c
+:END:
+#+title: wch-link debugger
+
+https://www.wch-ic.com/products/WCH-Link.html

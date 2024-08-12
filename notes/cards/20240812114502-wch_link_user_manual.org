@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       b81fc52e-dead-4493-aa66-d616920838df
+:END:
+#+title: wch-link user manual
+
+https://www.wch-ic.com/downloads/WCH-LinkUserManual_PDF.html

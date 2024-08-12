@@ -1,0 +1,12 @@
+:PROPERTIES:
+:ID:       86d8ec01-f21b-4f7d-8d75-05e60c4a1ee7
+:END:
+#+title: mounriver studio risc-v gnu toolchain
+
+Precompiled [[id:1c04d907-73f1-4226-82dd-b39251a0355d][risc-v gnu toolchain]] distributed by MounRiver,
+ and included as part of [[id:09f8c273-00e0-4134-ab95-6bd688cd4296][MounRiver Studio]].
+
+The toolchain can be downloaded from:
+http://www.mounriver.com/download
+
+Unfortunately, there are [[id:13eceae2-ab25-4e28-b77c-c6a8ccc852b8][differences between mrs and open source risc-v toolchain]].

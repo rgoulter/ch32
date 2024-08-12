@@ -1,0 +1,15 @@
+:PROPERTIES:
+:ID:       05b5045a-6dd7-4e9c-aeff-22e781148c47
+:END:
+#+title: ch58x
+
+https://www.wch-ic.com/products/CH583.html
+
+- BLE 5.3
+
+* CH582F
+:PROPERTIES:
+:ID:       953fcffb-2f1d-4503-908d-3577fc2ae71a
+:END:
+
+- QFN-28

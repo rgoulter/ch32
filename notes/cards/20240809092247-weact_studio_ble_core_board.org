@@ -1,0 +1,24 @@
+:PROPERTIES:
+:ID:       ddd8303d-0dab-46c6-b8b0-9688be312c34
+:END:
+#+title: weact studio ble core board
+
+https://github.com/WeActStudio/WeActStudio.WCH-BLE-Core
+
+* CH582F
+:PROPERTIES:
+:ID:       cdb0ea76-2a28-4339-975b-d7ea37a4a9f9
+:END:
+
+Uses [[id:953fcffb-2f1d-4503-908d-3577fc2ae71a][CH582F]].
+
+https://aliexpress.com/item/1005004784988010.html
+
+* CH592F
+:PROPERTIES:
+:ID:       8f7298aa-a531-4da8-834f-b69e5cf884fd
+:END:
+
+Uses [[id:8f7298aa-a531-4da8-834f-b69e5cf884fd][CH592F]].
+
+https://vi.aliexpress.com/item/1005006117859297.html

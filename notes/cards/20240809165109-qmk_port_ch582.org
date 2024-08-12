@@ -1,0 +1,10 @@
+:PROPERTIES:
+:ID:       62075b45-a290-4898-9ecc-95e78d027083
+:END:
+#+title: qmk port ch582
+
+https://github.com/O-H-M2/qmk_port_ch582
+
+[[id:27d40be1-0f3b-41d3-b015-3dc072efba8f][keyboard firmware]].
+
+Wraps qmk/qmk_firmware with CMake code, and defines a platform for [[id:05b5045a-6dd7-4e9c-aeff-22e781148c47][ch58x]].

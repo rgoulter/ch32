@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       422b4ef5-3b75-44df-9159-c8dfd2341cbf
+:END:
+#+title: Rust programming language
+
+A "better than C" programming language.

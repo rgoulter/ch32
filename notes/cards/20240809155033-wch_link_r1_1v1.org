@@ -1,0 +1,7 @@
+:PROPERTIES:
+:ID:       90935b88-b490-42d7-b4e3-fb3a480106fe
+:END:
+#+title: wch-link-r1-1v1
+
+Per the WCH-Link schematic,
+uses CH549G.

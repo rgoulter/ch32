@@ -1,0 +1,20 @@
+:PROPERTIES:
+:ID:       adacdd69-d60f-42ee-9e90-eb6aa69d23c7
+:END:
+#+title: wch-link for ch58x
+
+Per [[id:3f3e6d9c-1250-4d89-9216-0f90749d409a][wch-link supported chip models]]:
+
+The [[id:05b5045a-6dd7-4e9c-aeff-22e781148c47][ch58x]] is supported by:
+
+- [[id:90935b88-b490-42d7-b4e3-fb3a480106fe][WCH-Link]]
+- [[id:a6ff5e5c-d1b9-4ba7-af1e-171965736d7d][WCH-LinkE]]
+
+The ch32x035 is NOT supported by:
+
+- [[id:47cf1ff0-1bf0-494a-97f2-b316f2040302][WCH-LinkW-r0-1v1]]
+
+Per [[id:86246d61-0cd4-4c72-b9eb-059355105265][wch-link pin connections]]:
+
+- SWDIO :: PB14
+- SWCLK :: PB15

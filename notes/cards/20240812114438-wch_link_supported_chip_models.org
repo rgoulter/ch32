@@ -1,0 +1,16 @@
+:PROPERTIES:
+:ID:       3f3e6d9c-1250-4d89-9216-0f90749d409a
+:END:
+#+title: wch-link supported chip models
+
+Per Table 5 "Link supported chip model" of [[id:b81fc52e-dead-4493-aa66-d616920838df][wch-link user manual]]:
+
+| MCU        | [[id:90935b88-b490-42d7-b4e3-fb3a480106fe][WCH-Link]] | [[id:a6ff5e5c-d1b9-4ba7-af1e-171965736d7d][WCH-LinkE]] | WCH-DAPLink | [[id:47cf1ff0-1bf0-494a-97f2-b316f2040302][WCH-LinkW]] |
+|------------+----------+-----------+-------------+-----------|
+| CH32X035   | No       | Yes       | No          | Yes       |
+| CH32V203   | Yes      | Yes       | No          | Yes       |
+| CH58x      | Yes      | Yes       | No          | No        |
+| CH592      | No       | Yes       | No          | No        |
+
+In summary: WCH-LinkE supports all chips.
+Otherwise, take care to ensure compatibility.

@@ -1,0 +1,9 @@
+:PROPERTIES:
+:ID:       47cf1ff0-1bf0-494a-97f2-b316f2040302
+:END:
+#+title: wch-linkw-r0-1v1
+
+WCH-LinkW.
+
+Per WCH-Link schematic,
+uses CH32V208G.
