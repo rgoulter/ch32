@@ -36,6 +36,7 @@
       ];
 
       perSystem = {
+        self',
         config,
         pkgs,
         system,
@@ -53,6 +54,17 @@
           programs.treefmt.package = config.treefmt.build.wrapper;
 
           imports = [./devenv.nix];
+
+          packages = (with pkgs; [
+            cmake
+            ninja
+          ]) ++ (with self'.packages; [
+            mrs-openocd
+            mrs-riscv-embedded-gcc
+            mrs-riscv-embedded-gcc12
+            wchisp
+            wlink
+          ]);
         };
 
         packages = let
