@@ -16,6 +16,8 @@
 #include <ch32x035_usbfs_device.h>
 #include "usbd_composite_km.h"
 
+#include "smart_keymap.h"
+
 /*******************************************************************************/
 /* Global Variable Definition */
 
@@ -84,6 +86,23 @@ void TIM3_IRQHandler( void )
 
         /* Handle keyboard scan */
         KB_Scan( );
+
+        /* Handle keyboard scan data */
+        KB_Scan_Handle(  );
+
+        keymap_tick(KB_Data_Pack);
+
+        /* Determine if enumeration is complete, perform data transfer if completed */
+        if(USBFS_DevEnumStatus)
+        {
+            if( USBFS_DevEnumStatus )
+            {
+                USBFS_Endp_DataUp( DEF_UEP1, KB_Data_Pack, sizeof( KB_Data_Pack ), DEF_UEP_CPY_LOAD );
+
+                /* Handle keyboard lighting */
+                KB_LED_Handle( );
+            }
+        }
     }
 }
 
@@ -106,6 +125,8 @@ void KB_Scan_Init( void )
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init( GPIOB, &GPIO_InitStructure );
+
+    keymap_init();
 }
 
 /*********************************************************************
@@ -195,7 +216,6 @@ void KB_Scan_Handle( void )
 {
     uint8_t i, j;
     uint8_t status;
-    static uint8_t key_cnt = 0x00;
     static uint8_t flag = 0x00;
 
     if( KB_Scan_Done )
@@ -230,75 +250,39 @@ void KB_Scan_Handle( void )
                     {
                         if( i == 0 )
                         {
-                            for( j = 2; j < 8; j++ )
-                            {
-                                if( KB_Data_Pack[ j ] == DEF_KEY_CHAR_W )
-                                {
-                                    break;
-                                }
-                            }
+                            keymap_register_input_keyrelease(0);
                         }
                         else if( i == 1 )
                         {
-                            for( j = 2; j < 8; j++ )
-                            {
-                                if( KB_Data_Pack[ j ] == DEF_KEY_CHAR_A )
-                                {
-                                    break;
-                                }
-                            }
+                            keymap_register_input_keyrelease(1);
                         }
                         else if( i == 3 )
                         {
-                            for( j = 2; j < 8; j++ )
-                            {
-                                if( KB_Data_Pack[ j ] == DEF_KEY_CHAR_S )
-                                {
-                                    break;
-                                }
-                            }
+                            keymap_register_input_keyrelease(2);
                         }
                         else if( i == 11 )
                         {
-                            for( j = 2; j < 8; j++ )
-                            {
-                                if( KB_Data_Pack[ j ] == DEF_KEY_CHAR_D )
-                                {
-                                    break;
-                                }
-                            }
+                            keymap_register_input_keyrelease(3);
                         }
-
-                        if( j == 8 )
-                        {
-                            KB_Data_Pack[ 5 ] = 0;
-                        }
-                        else
-                        {
-                            memcpy( &KB_Data_Pack[ j ], &KB_Data_Pack[ j + 1 ], ( 8 - j - 1 ) );
-                            KB_Data_Pack[ 7 ] = 0;
-                        }
-                        key_cnt--;
                     }
                     else                                            // Key release
                     {
                         if( i == 0 )
                         {
-                            KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_W;
+                            keymap_register_input_keypress(0);
                         }
                         else if( i == 1 )
                         {
-                            KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_A;
+                            keymap_register_input_keypress(1);
                         }
                         else if( i == 3 )
                         {
-                            KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_S;
+                            keymap_register_input_keypress(2);
                         }
                         else if( i == 11 )
                         {
-                            KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_D;
+                            keymap_register_input_keypress(3);
                         }
-                        key_cnt++;
                     }
                 }
             }
@@ -306,18 +290,6 @@ void KB_Scan_Handle( void )
             /* Copy the keyboard data to the buffer of endpoint 1 and set the data uploading flag */
             KB_Scan_Last_Result = KB_Scan_Result;
             flag = 1;
-        }
-    }
-
-    if( flag )
-    {
-        /* Load keyboard data to endpoint 1 */
-        status = USBFS_Endp_DataUp( DEF_UEP1, KB_Data_Pack, sizeof( KB_Data_Pack ), DEF_UEP_CPY_LOAD );
-
-        if( status == READY )
-        {
-            /* Clear flag after successful loading */
-            flag = 0;
         }
     }
 }
