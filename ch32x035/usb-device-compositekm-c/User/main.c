@@ -44,7 +44,7 @@ int main(void)
     printf( "KB Scan Init OK!\r\n" );
 
     /* Initialize timer for Keyboard and mouse scan timing */
-    TIM3_Init( 1, SystemCoreClock / 10000 - 1 );
+    TIM3_Init( 47999, 0 );
     printf( "TIM3 Init OK!\r\n" );
 
 
