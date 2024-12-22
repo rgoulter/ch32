@@ -2,7 +2,7 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "wlink";
-  version = "nightly";
+  version = "git";
   nativeBuildInputs = [
     pkg-config
   ];
@@ -12,8 +12,8 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "ch32-rs";
     repo = pname;
-    rev = "fd31f2b614ab462a84d8508108445142c2af72ec";
-    hash = "sha256-fKbtLGD6ch9S8WP2UhUBFisYko6BKK8v9HaHstUAKoE=";
+    rev = "217f0e5136892ffcc6a80204a601bc1b62159505";
+    hash = "sha256-XxPvnIovShPvOhviLcVh2/+jwj27wS6WBHSeU6q8AIw=";
   };
-  cargoHash = "sha256-u1E+oAV7KM6xfYghjg/E1eQhSqF0PrcBvX7UQQGY6gM=";
+  cargoHash = "sha256-uiO+9pKvV+cXqhp/vyTWKQPJQ0CuVE8FpcupXsOvWLw=";
 }
