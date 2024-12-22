@@ -2,12 +2,12 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "wchisp";
-  version = "0.3-git";
+  version = "git";
   src = fetchFromGitHub {
     owner = "ch32-rs";
     repo = pname;
-    rev = "4b4787243ef9bc87cbbb0d95c7482b4f7c9838f1";
-    hash = "sha256-Ju2DBv3R4O48o8Fk/AFXOBIsvGMK9hJ8Ogxk47f7gcU=";
+    rev = "c47962d214fe3d44b47d8be989eb94990ac4081f";
+    hash = "sha256-Bd51ztuhp1HiW8Edq8bGjRvXfr/zlYsanKqJxj2ujk8=";
   };
-  cargoHash = "sha256-MbCLQBk7aJXcUOalsNbSxozvI2Tx3kerLXgi4l7BKoc=";
+  cargoHash = "sha256-6v66yJZVtMdFNRIKNhf7aYalHGJvbNrslq46woAI7GQ=";
 }
