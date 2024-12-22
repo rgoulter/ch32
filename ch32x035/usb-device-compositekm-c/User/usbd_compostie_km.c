@@ -32,15 +32,9 @@ uint8_t  KB_Data_Pack[ 8 ] = { 0x00 };                                          
 volatile uint8_t  KB_LED_Last_Status = 0x00;                                    // Keyboard LED Last Result
 volatile uint8_t  KB_LED_Cur_Status = 0x00;                                     // Keyboard LED Current Result
 
-/* USART */
-volatile uint8_t  USART_Recv_Dat = 0x00;
-volatile uint8_t  USART_Send_Flag = 0x00;
-volatile uint8_t  USART_Send_Cnt = 0x00;
-
 /*******************************************************************************/
 /* Interrupt Function Declaration */
 void TIM3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 /*********************************************************************
  * @fn      TIM3_Init
@@ -98,138 +92,6 @@ void TIM3_IRQHandler( void )
 
         /* Handle mouse scan */
         MS_Scan( );
-
-        /* Start timing for uploading the key value received from USART2 */
-        if( USART_Send_Flag )
-        {
-            USART_Send_Cnt++;
-        }
-    }
-}
-
-/*********************************************************************
- * @fn      USART2_Init
- *
- * @brief   Initialize UART2 to receive keyboard data sent through the
- *          PC serial software.
- *
- * @param   baudrate - Serial baud rate
- *
- * @return  none
- */
-void USART2_Init( uint32_t baudrate )
-{
-    GPIO_InitTypeDef GPIO_InitStructure = { 0 };
-    USART_InitTypeDef USART_InitStructure = { 0 };
-    NVIC_InitTypeDef NVIC_InitStructure = { 0 };
-
-    RCC_APB1PeriphClockCmd( RCC_APB1Periph_USART2, ENABLE );
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA, ENABLE );
-
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-    GPIO_Init( GPIOA, &GPIO_InitStructure );
-
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    GPIO_Init( GPIOA, &GPIO_InitStructure );
-
-    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init( &NVIC_InitStructure );
-
-    USART_InitStructure.USART_BaudRate = baudrate;
-    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-    USART_InitStructure.USART_StopBits = USART_StopBits_1;
-    USART_InitStructure.USART_Parity = USART_Parity_No;
-    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-
-    USART_Init( USART2, &USART_InitStructure );
-    USART_ITConfig( USART2, USART_IT_RXNE, ENABLE );
-    USART_Cmd( USART2, ENABLE );
-}
-
-/*********************************************************************
- * @fn      USART2_IRQHandler
- *
- * @brief   This function handles USART2 global interrupt request.
- *
- * @return  none
- */
-void USART2_IRQHandler( void )
-{
-    if( USART_GetITStatus( USART2, USART_IT_RXNE) != RESET )
-    {
-        /* Save the key value received from USART2 */
-        USART_Recv_Dat = USART_ReceiveData( USART2 ) & 0xFF;
-    }
-}
-
-/*********************************************************************
- * @fn      USART2_Receive_Handle
- *
- * @brief   This function handles the key value received from USART2.
- *
- * @return  none
- */
-void USART2_Receive_Handle( void )
-{
-    uint8_t status;
-    static uint8_t flag = 0x00;
-
-    if( flag == 0 )
-    {
-        /* Store the received specified key value into the keyboard data buffer */
-        if( ( USART_Recv_Dat == DEF_KEY_CHAR_A ) ||
-            ( USART_Recv_Dat == DEF_KEY_CHAR_W ) ||
-            ( USART_Recv_Dat == DEF_KEY_CHAR_S ) ||
-            ( USART_Recv_Dat == DEF_KEY_CHAR_D ) )
-        {
-            memset( KB_Data_Pack, 0x00, sizeof( KB_Data_Pack ) );
-            KB_Data_Pack[ 2 ] = USART_Recv_Dat;
-            flag = 1;
-        }
-    }
-    else if( flag == 1 )
-    {
-        /* Load keyboard data to endpoint 1 */
-        status = USBFS_Endp_DataUp( DEF_UEP1, KB_Data_Pack, sizeof( KB_Data_Pack ), DEF_UEP_CPY_LOAD );
-
-        if( status == READY )
-        {
-            /* Enable timing for uploading the key value */
-            USART_Send_Cnt = 0;
-            USART_Send_Flag = 1;
-            flag = 2;
-        }
-    }
-    else if( flag == 2 )
-    {
-        /* Delay 10ms to ensure that the key value is successfully uploaded,
-         * and prepare the data packet indicating the key release.
-         */
-        if( USART_Send_Cnt >= 50 )
-        {
-            USART_Send_Flag = 0;
-            memset( KB_Data_Pack, 0x00, sizeof( KB_Data_Pack ) );
-            flag = 3;
-        }
-    }
-    else if( flag == 3 )
-    {
-        /* Load keyboard data to endpoint 1 */
-        status = USBFS_Endp_DataUp( DEF_UEP1, KB_Data_Pack, sizeof( KB_Data_Pack ), DEF_UEP_CPY_LOAD );
-
-        /* Clear variables for next reception */
-        if( status == READY )
-        {
-            USART_Recv_Dat = 0;
-            flag = 0;
-        }
     }
 }
 
