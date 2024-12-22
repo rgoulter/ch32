@@ -13,7 +13,7 @@
 /*
  * @Note
  * Composite Keyboard and Mouse Example:
- * This example uses PB12-PB15 to simulate keyboard key pressing, active low.
+ * This example uses PB0, PB1, PB3, PB11 to simulate keyboard key pressing, active low.
  */
 
 #include <ch32x035_usbfs_device.h>
