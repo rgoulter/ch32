@@ -15,9 +15,6 @@
  * Composite Keyboard and Mouse Example:
  * This example uses PB12-PB15 and PA4-PA7 to simulate keyboard key pressing and mouse
  * movement respectively, active low.
- * At the same time, it also uses USART2(PA3) to receive the specified data sent from
- * the host to simulate the pressing and releasing of the following specific keyboard
- * keys. Data is sent in hexadecimal format and 1 byte at a time.
  * 'W' -> 0x1A
  * 'A' -> 0x04
  * 'S' -> 0x16
@@ -45,10 +42,6 @@ int main(void)
     USART_Printf_Init(115200);
     printf("SystemClk:%d\r\n", SystemCoreClock);
     printf("ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
-
-    /* Initialize USART2 for receiving the specified keyboard data */
-    USART2_Init( 115200 );
-    printf( "USART2 Init OK!\r\n" );
 
     /* Initialize GPIO for keyboard scan */
     KB_Scan_Init( );
@@ -84,9 +77,6 @@ int main(void)
 
                 /* Handle mouse scan data */
                 MS_Scan_Handle( );
-
-                /* Handle USART2 receiving data */
-                USART2_Receive_Handle( );
             }
         }
     }
