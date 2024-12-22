@@ -35,8 +35,6 @@ extern volatile uint8_t  KB_LED_Cur_Status;
 /*******************************************************************************/
 /* Function Declaration */
 extern void TIM3_Init( uint16_t arr, uint16_t psc );
-extern void USART2_Init( uint32_t baudrate );
-extern void USART2_Receive_Handle( void );
 extern void KB_Scan_Init( void );
 extern void KB_Sleep_Wakeup_Cfg( void );
 extern void KB_Scan( void );
