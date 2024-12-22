@@ -13,12 +13,7 @@
 /*
  * @Note
  * Composite Keyboard and Mouse Example:
- * This example uses PB12-PB15 and PA4-PA7 to simulate keyboard key pressing and mouse
- * movement respectively, active low.
- * 'W' -> 0x1A
- * 'A' -> 0x04
- * 'S' -> 0x16
- * 'D' -> 0x07
+ * This example uses PB12-PB15 to simulate keyboard key pressing, active low.
  */
 
 #include <ch32x035_usbfs_device.h>
@@ -48,11 +43,6 @@ int main(void)
     KB_Sleep_Wakeup_Cfg( );
     printf( "KB Scan Init OK!\r\n" );
 
-    /* Initialize GPIO for mouse scan */
-    MS_Scan_Init( );
-    MS_Sleep_Wakeup_Cfg( );
-    printf( "MS Scan Init OK!\r\n" );
-
     /* Initialize timer for Keyboard and mouse scan timing */
     TIM3_Init( 1, SystemCoreClock / 10000 - 1 );
     printf( "TIM3 Init OK!\r\n" );
@@ -74,9 +64,6 @@ int main(void)
 
                 /* Handle keyboard lighting */
                 KB_LED_Handle( );
-
-                /* Handle mouse scan data */
-                MS_Scan_Handle( );
             }
         }
     }

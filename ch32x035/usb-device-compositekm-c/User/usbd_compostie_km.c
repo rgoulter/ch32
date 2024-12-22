@@ -19,11 +19,6 @@
 /*******************************************************************************/
 /* Global Variable Definition */
 
-/* Mouse */
-volatile uint8_t  MS_Scan_Done = 0x00;                                          // Mouse Movement Scan Done
-volatile uint16_t MS_Scan_Result = 0x00F0;                                      // Mouse Movement Scan Result
-uint8_t  MS_Data_Pack[ 4 ] = { 0x00 };                                          // Mouse IN Data Packet
-
 /* Keyboard */
 volatile uint8_t  KB_Scan_Done = 0x00;                                          // Keyboard Keys Scan Done
 volatile uint16_t KB_Scan_Result = 0xF000;                                      // Keyboard Keys Current Scan Result
@@ -89,9 +84,6 @@ void TIM3_IRQHandler( void )
 
         /* Handle keyboard scan */
         KB_Scan( );
-
-        /* Handle mouse scan */
-        MS_Scan( );
     }
 }
 
@@ -358,164 +350,6 @@ void KB_LED_Handle( void )
             }
         }
         KB_LED_Last_Status = KB_LED_Cur_Status;
-    }
-}
-
-
-/*********************************************************************
- * @fn      MS_Scan_Init
- *
- * @brief   Initialize IO for mouse scan.
- *
- * @return  none
- */
-void MS_Scan_Init( void )
-{
-    GPIO_InitTypeDef GPIO_InitStructure = { 0 };
-
-    /* Enable GPIOC clock */
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA, ENABLE );
-
-    /* Initialize GPIOC (Pin4-Pin7) for the mouse scan */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init( GPIOA, &GPIO_InitStructure );
-}
-
-/*********************************************************************
- * @fn      MS_Sleep_Wakeup_Cfg
- *
- * @brief   Configure mouse wake up mode.
- *
- * @return  none
- */
-void MS_Sleep_Wakeup_Cfg( void )
-{
-    EXTI_InitTypeDef EXTI_InitStructure = { 0 };
-
-    /* Enable GPIOC clock */
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO, ENABLE );
-
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOA, GPIO_PinSource4 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line4;
-    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
-    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-    EXTI_Init( &EXTI_InitStructure );
-
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOA, GPIO_PinSource5 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line5;
-    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
-    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-    EXTI_Init( &EXTI_InitStructure );
-
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOA, GPIO_PinSource6 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line6;
-    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
-    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-    EXTI_Init( &EXTI_InitStructure );
-
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOA, GPIO_PinSource7 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line7;
-    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
-    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-    EXTI_Init( &EXTI_InitStructure );
-
-    EXTI->INTENR |= EXTI_INTENR_MR4 | EXTI_INTENR_MR5 | EXTI_INTENR_MR6 | EXTI_INTENR_MR7;
-}
-
-/*********************************************************************
- * @fn      MS_Scan
- *
- * @brief   Perform mouse scan.
- *
- * @return  none
- */
-void MS_Scan( void )
-{
-    static uint16_t scan_cnt = 0;
-    static uint16_t scan_result = 0;
-
-    scan_cnt++;
-    if( scan_cnt >= 2 )
-    {
-        scan_cnt = 0;
-
-        /* Determine whether the two scan results are consistent */
-        if( scan_result == ( GPIO_ReadInputData( GPIOA ) & 0x00F0 ) )
-        {
-            MS_Scan_Result = scan_result;
-            MS_Scan_Done = 1;
-        }
-    }
-    else if( scan_cnt >= 1 )
-    {
-        /* Save the first scan result */
-        scan_result = ( GPIO_ReadInputData( GPIOA ) & 0x00F0 );
-    }
-}
-
-/*********************************************************************
- * @fn      MS_Scan_Handle
- *
- * @brief   Handle mouse scan data.
- *
- * @return  none
- */
-void MS_Scan_Handle( void )
-{
-    uint8_t i;
-    uint8_t status;
-    static uint8_t flag = 0x00;
-
-    if( MS_Scan_Done )
-    {
-        MS_Scan_Done = 0;
-
-        memset( MS_Data_Pack, 0x00, sizeof( MS_Data_Pack ) );
-
-        for( i = 4; i < 8; i++ )
-        {
-            /* Determine that the mouse is moved */
-            if( ( MS_Scan_Result & ( 1 << i ) ) == 0 )
-            {
-                if( i == 4 )
-                {
-                    MS_Data_Pack[ 1 ] += 0x02;
-                }
-                else if( i == 5 )
-                {
-                    MS_Data_Pack[ 1 ] += 0xFE;
-                }
-                else if( i == 6 )
-                {
-                    MS_Data_Pack[ 2 ] += 0x02;
-                }
-                else if( i == 7 )
-                {
-                    MS_Data_Pack[ 2 ] += 0xFE;
-                }
-
-                /* Set the data uploading flag */
-                flag = 1;
-            }
-        }
-    }
-
-    if( flag )
-    {
-        /* Load mouse data to endpoint 2 */
-        status = USBFS_Endp_DataUp( DEF_UEP2, MS_Data_Pack, sizeof( MS_Data_Pack ), DEF_UEP_CPY_LOAD );
-
-        if( status == READY )
-        {
-            /* Clear flag after successful loading */
-            flag = 0;
-        }
     }
 }
 
