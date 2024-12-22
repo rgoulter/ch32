@@ -20,6 +20,9 @@ add_subdirectory(../sdk sdk)
 
 target_link_libraries(usb-device-compositekm sdk)
 
+add_subdirectory(libsmartkeymap smartkeymap)
+target_link_libraries(usb-device-compositekm smartkeymap)
+
 target_compile_definitions(usb-device-compositekm PUBLIC DEBUG=2)
 
 target_compile_features(usb-device-compositekm PUBLIC c_std_99)

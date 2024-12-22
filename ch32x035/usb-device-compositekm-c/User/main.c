@@ -54,17 +54,5 @@ int main(void)
     USB_Sleep_Wakeup_CFG( );
     while(1)
     {
-        /* Determine if enumeration is complete, perform data transfer if completed */
-        if(USBFS_DevEnumStatus)
-        {
-            if( USBFS_DevEnumStatus )
-            {
-                /* Handle keyboard scan data */
-                KB_Scan_Handle(  );
-
-                /* Handle keyboard lighting */
-                KB_LED_Handle( );
-            }
-        }
     }
 }
