@@ -21,8 +21,8 @@
 
 /* Keyboard */
 volatile uint8_t  KB_Scan_Done = 0x00;                                          // Keyboard Keys Scan Done
-volatile uint16_t KB_Scan_Result = 0xF000;                                      // Keyboard Keys Current Scan Result
-volatile uint16_t KB_Scan_Last_Result = 0xF000;                                 // Keyboard Keys Last Scan Result
+volatile uint16_t KB_Scan_Result = (1 << 0 | 1 << 1 | 1 << 3 | 1 << 11);                                      // Keyboard Keys Current Scan Result
+volatile uint16_t KB_Scan_Last_Result = (1 << 0 | 1 << 1 | 1 << 3 | 1 << 11);                                 // Keyboard Keys Last Scan Result
 uint8_t  KB_Data_Pack[ 8 ] = { 0x00 };                                          // Keyboard IN Data Packet
 volatile uint8_t  KB_LED_Last_Status = 0x00;                                    // Keyboard LED Last Result
 volatile uint8_t  KB_LED_Cur_Status = 0x00;                                     // Keyboard LED Current Result
@@ -102,7 +102,7 @@ void KB_Scan_Init( void )
     RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB, ENABLE );
 
     /* Initialize GPIOB (Pin4-Pin7) for the keyboard scan */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_3 | GPIO_Pin_11;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init( GPIOB, &GPIO_InitStructure );
@@ -122,35 +122,35 @@ void KB_Sleep_Wakeup_Cfg( void )
     /* Enable GPIOB clock */
     RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO, ENABLE );
 
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource12 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line12;
+    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource0 );
+    EXTI_InitStructure.EXTI_Line = EXTI_Line0;
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_Init( &EXTI_InitStructure );
 
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource13 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line13;
+    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource1 );
+    EXTI_InitStructure.EXTI_Line = EXTI_Line1;
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_Init( &EXTI_InitStructure );
 
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource14 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line14;
+    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource3 );
+    EXTI_InitStructure.EXTI_Line = EXTI_Line3;
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_Init( &EXTI_InitStructure );
 
-    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource15 );
-    EXTI_InitStructure.EXTI_Line = EXTI_Line15;
+    GPIO_EXTILineConfig( GPIO_PortSourceGPIOB, GPIO_PinSource11 );
+    EXTI_InitStructure.EXTI_Line = EXTI_Line11;
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_Init( &EXTI_InitStructure );
 
-    EXTI->INTENR |= EXTI_INTENR_MR12 | EXTI_INTENR_MR13 | EXTI_INTENR_MR14 | EXTI_INTENR_MR15;
+    EXTI->INTENR |= EXTI_INTENR_MR0 | EXTI_INTENR_MR1 | EXTI_INTENR_MR3 | EXTI_INTENR_MR11;
 }
 
 /*********************************************************************
@@ -171,7 +171,7 @@ void KB_Scan( void )
         scan_cnt = 0;
 
         /* Determine whether the two scan results are consistent */
-        if( scan_result == ( GPIO_ReadInputData( GPIOB ) & 0xF000 ) )
+        if( scan_result == ( GPIO_ReadInputData( GPIOB ) & (1 << 0 | 1 << 1 | 1 << 3 | 1 << 11) ) )
         {
             KB_Scan_Done = 1;
             KB_Scan_Result = scan_result;
@@ -180,7 +180,7 @@ void KB_Scan( void )
     else if( ( scan_cnt % 5 ) == 0 )
     {
         /* Save the first scan result */
-        scan_result = ( GPIO_ReadInputData( GPIOB ) & 0xF000 );
+        scan_result = ( GPIO_ReadInputData( GPIOB ) & (1 << 0 | 1 << 1 | 1 << 3 | 1 << 11) );
     }
 }
 
@@ -204,14 +204,31 @@ void KB_Scan_Handle( void )
 
         if( KB_Scan_Result != KB_Scan_Last_Result )
         {
-            for( i = 12; i < 16; i++ )
+            for( i = 0; i < 16; i++ )
             {
+                // ignore all except 0, 1, 3, 11:
+                switch (i) {
+                    case 2:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 12:
+                    case 13:
+                    case 14:
+                    case 15:
+                        continue;
+                }
+
                 /* Determine that there is at least one key is pressed or released */
                 if( ( KB_Scan_Result & ( 1 << i ) ) != ( KB_Scan_Last_Result & ( 1 << i ) ) )
                 {
                     if( ( KB_Scan_Result & ( 1 << i ) ) )           // Key press
                     {
-                        if( i == 12 )
+                        if( i == 0 )
                         {
                             for( j = 2; j < 8; j++ )
                             {
@@ -221,7 +238,7 @@ void KB_Scan_Handle( void )
                                 }
                             }
                         }
-                        else if( i == 13 )
+                        else if( i == 1 )
                         {
                             for( j = 2; j < 8; j++ )
                             {
@@ -231,7 +248,7 @@ void KB_Scan_Handle( void )
                                 }
                             }
                         }
-                        else if( i == 14 )
+                        else if( i == 3 )
                         {
                             for( j = 2; j < 8; j++ )
                             {
@@ -241,7 +258,7 @@ void KB_Scan_Handle( void )
                                 }
                             }
                         }
-                        else if( i == 15 )
+                        else if( i == 11 )
                         {
                             for( j = 2; j < 8; j++ )
                             {
@@ -265,19 +282,19 @@ void KB_Scan_Handle( void )
                     }
                     else                                            // Key release
                     {
-                        if( i == 12 )
+                        if( i == 0 )
                         {
                             KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_W;
                         }
-                        else if( i == 13 )
+                        else if( i == 1 )
                         {
                             KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_A;
                         }
-                        else if( i == 14 )
+                        else if( i == 3 )
                         {
                             KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_S;
                         }
-                        else if( i == 15 )
+                        else if( i == 11 )
                         {
                             KB_Data_Pack[ 2 + key_cnt ] = DEF_KEY_CHAR_D;
                         }
@@ -382,7 +399,7 @@ void MCU_Sleep_Wakeup_Operate( void )
 {
     printf( "Sleep\r\n" );
     __disable_irq();
-    EXTI_ClearFlag( EXTI_Line12 | EXTI_Line13 | EXTI_Line14 | EXTI_Line15 );
+    EXTI_ClearFlag( EXTI_Line0 | EXTI_Line1 | EXTI_Line3 | EXTI_Line11 );
     EXTI_ClearFlag( EXTI_Line4 | EXTI_Line5 | EXTI_Line6 | EXTI_Line7 );
 
     PWR_EnterSTOPMode(PWR_STOPEntry_WFE);
@@ -390,9 +407,9 @@ void MCU_Sleep_Wakeup_Operate( void )
     SystemCoreClockUpdate();
     USBFS_RCC_Init();
 
-    if( EXTI_GetFlagStatus( EXTI_Line12 | EXTI_Line13 | EXTI_Line14 | EXTI_Line15 ) != RESET  )
+    if( EXTI_GetFlagStatus( EXTI_Line0 | EXTI_Line1 | EXTI_Line3 | EXTI_Line11 ) != RESET  )
     {
-        EXTI_ClearFlag( EXTI_Line12 | EXTI_Line13 | EXTI_Line14 | EXTI_Line15 );
+        EXTI_ClearFlag( EXTI_Line0 | EXTI_Line1 | EXTI_Line3 | EXTI_Line11 );
         USBFS_Send_Resume( );
     }
     else if( EXTI_GetFlagStatus( EXTI_Line4 | EXTI_Line5 | EXTI_Line6 | EXTI_Line7 ) != RESET )
