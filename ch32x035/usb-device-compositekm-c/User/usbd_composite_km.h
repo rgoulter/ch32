@@ -40,10 +40,6 @@ extern void KB_Sleep_Wakeup_Cfg( void );
 extern void KB_Scan( void );
 extern void KB_Scan_Handle( void );
 extern void KB_LED_Handle( void );
-extern void MS_Scan_Init( void );
-extern void MS_Sleep_Wakeup_Cfg( void );
-extern void MS_Scan( void );
-extern void MS_Scan_Handle( void );
 extern void USB_Sleep_Wakeup_CFG( void );
 extern void MCU_Sleep_Wakeup_Operate( void );
 
