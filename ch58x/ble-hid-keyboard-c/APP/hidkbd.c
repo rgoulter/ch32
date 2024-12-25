@@ -20,6 +20,8 @@
 #include "hiddev.h"
 #include "hidkbd.h"
 
+#include "smart_keymap.h"
+
 /*********************************************************************
  * MACROS
  */
@@ -243,6 +245,9 @@ void HidEmu_Init()
 
     // Setup a delayed profile startup
     tmos_set_event(hidEmuTaskId, START_DEVICE_EVT);
+
+    // SmartKeymap
+    keymap_init();
 }
 
 /*********************************************************************
@@ -260,7 +265,7 @@ void HidEmu_Init()
  */
 uint16_t HidEmu_ProcessEvent(uint8_t task_id, uint16_t events)
 {
-    static uint8_t send_char = 4;
+    static uint8_t send_char = 0;
 
     if(events & SYS_EVENT_MSG)
     {
@@ -307,11 +312,22 @@ uint16_t HidEmu_ProcessEvent(uint8_t task_id, uint16_t events)
 
     if(events & START_REPORT_EVT)
     {
-        hidEmuSendKbdReport(send_char);
+        // SmartKeymap
+        keymap_register_input_keyrelease(send_char);
+
         send_char++;
-        if(send_char >= 29)
-            send_char = 4;
-        hidEmuSendKbdReport(0x00);
+        if(send_char >= 60)
+            send_char = 0;
+
+        keymap_register_input_keypress(send_char);
+
+        uint8_t buf[HID_KEYBOARD_IN_RPT_LEN];
+
+        keymap_tick(buf);
+
+        HidDev_Report(HID_RPT_ID_KEY_IN, HID_REPORT_TYPE_INPUT,
+                      HID_KEYBOARD_IN_RPT_LEN, buf);
+
         tmos_start_task(hidEmuTaskId, START_REPORT_EVT, 2000);
         return (events ^ START_REPORT_EVT);
     }

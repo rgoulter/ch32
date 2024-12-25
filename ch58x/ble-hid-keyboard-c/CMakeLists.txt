@@ -23,6 +23,9 @@ add_subdirectory(../sdk sdk)
 
 target_link_libraries(HID_Keyboard sdk)
 
+add_subdirectory(libsmartkeymap smartkeymap)
+target_link_libraries(HID_Keyboard smartkeymap)
+
 target_compile_definitions(HID_Keyboard PUBLIC DEBUG=1)
 
 target_compile_features(HID_Keyboard PUBLIC c_std_99)
