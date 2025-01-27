@@ -69,3 +69,30 @@ jobs:
 
       - name: Run Nix Build
         run: nix build --print-build-logs .#wlink
+
+  nix-build-xpack-riscv-none-elf-gcc:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - macos-13
+
+    permissions:
+      id-token: "write"
+      contents: "read"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Run Nix Build
+        run: nix build --print-build-logs .#xpack-riscv-none-elf-gcc
