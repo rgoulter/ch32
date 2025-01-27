@@ -1,8 +1,10 @@
-{ lib, fetchFromGitHub, rustPlatform }:
+{ lib, fetchFromGitHub, rustPlatform, pkg-config, libusb1 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "wchisp";
   version = "git";
+  nativeBuildInputs = [pkg-config];
+  buildInputs = [libusb1];
   src = fetchFromGitHub {
     owner = "ch32-rs";
     repo = pname;
