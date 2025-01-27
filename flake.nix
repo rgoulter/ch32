@@ -76,6 +76,7 @@
           wch-udev-rules = pkgs.callPackage ./nix/wch-udev-rules {};
           wchisp = pkgs.callPackage ./nix/wchisp {};
           wlink = pkgs.callPackage ./nix/wlink {};
+          xpack-riscv-none-elf-gcc  = pkgs.callPackage ./nix/xpack-riscv-none-elf-gcc { inherit system; };
         };
 
         treefmt = import ./treefmt.nix;
