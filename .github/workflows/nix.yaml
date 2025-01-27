@@ -1,0 +1,69 @@
+name: Nix Build
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'flake.nix'
+      - 'flake.lock'
+      - 'nix/**'
+
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - 'flake.nix'
+      - 'flake.lock'
+      - 'nix/**'
+
+jobs:
+  nix-build-wchisp:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+
+    permissions:
+      id-token: "write"
+      contents: "read"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Run Nix Build
+        run: nix build --print-build-logs .#wchisp
+
+  nix-build-wlink:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+
+    permissions:
+      id-token: "write"
+      contents: "read"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Run Nix Build
+        run: nix build --print-build-logs .#wlink
