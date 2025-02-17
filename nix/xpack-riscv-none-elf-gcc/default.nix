@@ -71,6 +71,6 @@ stdenv.mkDerivation {
           libstdc++.so.6 \
           libz.so.1 \
           libzstd.so.1 \
-      --paths $out/bin/
+      --paths $out
   '');
 }
