@@ -1,8 +1,8 @@
 { lib
-, auto-patchelf
 , stdenv
 , fetchurl
 , system
+, autoPatchelfHook
 }:
 
 let
@@ -40,37 +40,38 @@ stdenv.mkDerivation {
 
   noAuditTmpdir = true;
 
+  nativeBuildInputs = lib.lists.optional stdenv.isLinux [autoPatchelfHook];
+
   # patch elf: ignore the libraries
   # (xpack provides these in libexec)
+  autoPatchelfIgnoreMissingDeps = [
+          "libcrypt.so.2"
+          "libcrypto.so.3"
+          "libexpat.so.1"
+          "libffi.so.8"
+          "libfl.so.2"
+          "libgcc_s.so.1"
+          "libgmp.so.10"
+          "libiconv.so.2"
+          "libisl.so.23"
+          "liblzma.so.5"
+          "libmpc.so.3"
+          "libmpfr.so.6"
+          "libncurses.so.6"
+          "libnsl.so.1"
+          "libpanel.so.6"
+          "libpython3.12.so.1.0"
+          "libreadline.so.8"
+          "libsqlite3.so.0"
+          "libssl.so.3"
+          "libstdc++.so.6"
+          "libz.so.1"
+          "libzstd.so.1"
+  ];
+
   installPhase = ''
     mkdir -p $out/
     cp -r . $out
     LIBS=$(cd libexec/ && ls lib*)
-  '' + (lib.strings.optionalString stdenv.isLinux ''
-    ${auto-patchelf}/bin/auto-patchelf \
-      --ignore-missing \
-          libcrypt.so.2 \
-          libcrypto.so.3 \
-          libexpat.so.1 \
-          libffi.so.8 \
-          libfl.so.2 \
-          libgcc_s.so.1 \
-          libgmp.so.10 \
-          libiconv.so.2 \
-          libisl.so.23 \
-          liblzma.so.5 \
-          libmpc.so.3 \
-          libmpfr.so.6 \
-          libncurses.so.6 \
-          libnsl.so.1 \
-          libpanel.so.6 \
-          libpython3.12.so.1.0 \
-          libreadline.so.8 \
-          libsqlite3.so.0 \
-          libssl.so.3 \
-          libstdc++.so.6 \
-          libz.so.1 \
-          libzstd.so.1 \
-      --paths $out
-  '');
+  '';
 }
